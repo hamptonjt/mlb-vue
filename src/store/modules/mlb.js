@@ -10,6 +10,7 @@ const HTTP = axios.create({
 
 const state = {
   // put stuff here
+  teams: [],
   teamInfo: {
     teamId: '',
     players: []
@@ -17,26 +18,38 @@ const state = {
 }
 
 const mutations = {
+  'SAVETEAMLIST' (state, teams) {
+    state.teams = teams
+  },
   'SETTEAMINFO' (state, object) {
     state.teamInfo = object
   }
 }
 
 const actions = {
+  async fetchTeams({commit}) {
+    let response = await HTTP.get("/json/named.team_all_season.bam?sport_code='mlb'&season='2019'&all_star_sw='N'")
+    let teams = response.data.team_all_season.queryResults.row
+    commit('SAVETEAMLIST', teams)
+  },
   async fetchTeamInfo({commit}, teamId) {
-    teamId = 147
-    let response = await HTTP.get('/json/named.roster_40.bam?team_id=\'' + teamId + '\'&roster_40.col_in=player_id&roster_40.col_in=position_txt&roster_40.col_in=name_full')
-    let players = response.data.roster_40.queryResults.row
-    let teamInfo = {
-      teamId,
-      players
+    if (teamId) {
+      let response = await HTTP.get('/json/named.roster_40.bam?team_id=\'' + teamId + '\'&roster_40.col_in=player_id&roster_40.col_in=position_txt&roster_40.col_in=name_full')
+      if (response.data) {
+        let players = response.data.roster_40.queryResults.row
+        let teamInfo = {
+          teamId,
+          players
+        }
+        commit('SETTEAMINFO', teamInfo)
+      }
     }
-    commit('SETTEAMINFO', teamInfo)
   }
 }
 
 const getters = {
-  getTeamInfo: state => state.teamInfo 
+  getTeamInfo: state => state.teamInfo,
+  getTeams: state => state.teams
 }
 
 export default {

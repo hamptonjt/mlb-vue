@@ -1,17 +1,26 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+    <mlb/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import mlb from './components/mlb.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    mlb
+  },
+  methods: {
+    ...mapActions('mlb', {
+      fetchTeamInfo: 'fetchTeamInfo'
+    })
+  },
+  created: function() {
+    this.fetchTeamInfo()
   }
 }
 </script>

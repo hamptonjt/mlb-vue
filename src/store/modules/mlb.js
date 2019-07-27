@@ -37,9 +37,16 @@ const actions = {
       let response = await HTTP.get('/json/named.roster_40.bam?team_id=\'' + teamId + '\'&roster_40.col_in=player_id&roster_40.col_in=position_txt&roster_40.col_in=name_full')
       if (response.data) {
         let players = response.data.roster_40.queryResults.row
+        let playersData = await Promise.all(players.map(async (player) => {
+          let resp = await HTTP.get('/json/named.player_info.bam?sport_code=\'mlb\'&player_id=\'' + player.player_id + '\'')
+          return resp.data.player_info.queryResults.row
+        }))
+        
+        // eslint-disable-next-line no-console
+        console.log(playersData)
         let teamInfo = {
           teamId,
-          players
+          players: playersData
         }
         commit('SETTEAMINFO', teamInfo)
       }

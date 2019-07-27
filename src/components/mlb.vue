@@ -27,10 +27,10 @@
               {{ props.row.player_id }}
             </b-table-column>
             <b-table-column field="name_full" label="Player Name" sortable>
-              {{ props.row.name_full }}
+              {{ props.row.name_full }} {{ props.row.jersey_number }}
             </b-table-column>
-            <b-table-column field="position_txt" label="Position" sortable>
-              {{ props.row.position_txt }}
+            <b-table-column field="primary_position_txt" label="Position" sortable>
+              {{ props.row.primary_position_txt }}
             </b-table-column>
           </template>
         </b-table>
